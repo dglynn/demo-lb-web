@@ -1,0 +1,25 @@
+{
+  "name": "demo-lb-web",
+  "version": "1.0.0",
+  "description": "Demo Web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+  "type": "git",
+  "url": "git+https://github.com/dglynn/demo-lb-web.git"
+  },
+  "author": "Darren Glynn",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "helmet": "^3.10.0"
+  },
+  "bugs": {
+    "url": "https://github.com/dglynn/demo-lb-web/issues"
+  },
+  "homepage": "https://github.com/dglynn/demo-lb-web#readme"
+}
