@@ -2,6 +2,10 @@
 # MegaLinter GitHub Action configuration file
 # More info at https://oxsecurity.github.io/megalinter
 name: MegaLinter
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
 
 on:
   # Trigger mega-linter at every push. Action will also be visible from Pull Requests to main
@@ -42,12 +46,13 @@ jobs:
           # https://oxsecurity.github.io/megalinter/configuration/
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Validates all source when push on main, else just the git diff with main. Override with true if you always want to lint all sources
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISABLE_LINTERS: SPELL_CSPELL_ANALYZE_FILE_NAMES,SPELL_LYCHEE,SPELL_CSPELL
           # ADD YOUR CUSTOM ENV VARIABLES HERE OR DEFINE THEM IN A FILE .mega-linter.yml AT THE ROOT OF YOUR REPOSITORY
           # DISABLE: COPYPASTE,SPELL # Uncomment to disable copy-paste and spell checks
 
       # Upload MegaLinter artifacts
       - name: Archive production artifacts
-        if: ${{ success() }} || ${{ failure() }}
+        if: ${{ success() || failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: MegaLinter reports
@@ -59,7 +64,7 @@ jobs:
       - name: Create Pull Request with applied fixes
         id: cpr
         if: steps.ml.outputs.has_updated_sources == 1 && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'pull_request' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
           commit-message: "[MegaLinter] Apply linters automatic fixes"
@@ -77,7 +82,7 @@ jobs:
         run: sudo chown -Rc $UID .git/
       - name: Commit and push applied linter fixes
         if: steps.ml.outputs.has_updated_sources == 1 && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'commit' && github.ref != 'refs/heads/main' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
           commit_message: "[MegaLinter] Apply linters fixes"
