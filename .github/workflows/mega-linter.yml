@@ -48,6 +48,8 @@ jobs:
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISABLE_LINTERS: SPELL_CSPELL_ANALYZE_FILE_NAMES,SPELL_LYCHEE,SPELL_CSPELL
+          # Allow Zizmor to use the repository token for GitHub API checks
+          ACTION_ZIZMOR_UNSECURED_ENV_VARIABLES: GITHUB_TOKEN
 
       - name: Archive MegaLinter artifacts
         if: ${{ success() || failure() }}
