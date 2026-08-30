@@ -1,6 +1,6 @@
 # Vagrant web load balancer demo
 This project is a simple example of how to build a NodeJS web app and run a
-HAProxy Load Balancer in front of the web app, using docker containers. 
+HAProxy Load Balancer in front of the web app, using docker containers.
 This is managed by a multi-machine Vagrantfile that uses the Vagrant docker
 provider for setting up the containers.
 
@@ -19,7 +19,7 @@ to the web container: https://www.vagrantup.com/docs/docker/configuration.html#l
 ## How it Works
 Once the installation finishes, you can  browse to `localhost` from your web
 browser. The HAProxy is listening on `port 80` and it will forward your request
-to the web app running on `port 8080` on `localhost`. 
+to the web app running on `port 8080` on `localhost`.
 
 The web app is using NodeJS, ExpressJS and EJS for templating the NodeJS app.
 
